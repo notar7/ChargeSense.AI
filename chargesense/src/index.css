@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   ChargeSense Premium Cyber-EV Design System
+   Theme: Hybrid (Dark Navigation + Light Content)
+   ============================================ */
+
+:root {
+  --bg-cyber-black: #05070A;
+  --bg-cyber-deep: #080C14;
+  --bg-panel: rgba(13, 20, 35, 0.5);
+  
+  --color-ev-green: #10B981;
+  --color-ev-green-light: #10B981;
+  --color-ev-green-glow: rgba(16, 185, 129, 0.15);
+  --color-ev-cyan: #06B6D4;
+  --color-ev-cyan-glow: rgba(6, 182, 212, 0.15);
+  --color-ev-yellow: #F59E0B;
+  --color-ev-yellow-glow: rgba(245, 158, 11, 0.15);
+  --color-ev-red: #EF4444;
+  --color-ev-red-glow: rgba(239, 68, 68, 0.15);
+
+  --border-glass: rgba(255, 255, 255, 0.05);
+
+  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+body {
+  font-family: var(--font-heading);
+  background-color: var(--bg-cyber-black);
+  color: #F3F4F6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Landing Page Grid & Glows */
+.globe-container {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: var(--bg-cyber-black);
+}
+
+.globe-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.globe-overlay > * {
+  pointer-events: auto;
+}
+
+.glow-logo-ring {
+  box-shadow: 0 0 20px rgba(0, 245, 160, 0.2);
+}
+
+/* Light Theme Content Area Styling */
+.light-content-bg {
+  background-color: #F8FAFC;
+  background-image: 
+    linear-gradient(rgba(15, 23, 42, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.015) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.light-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.light-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+.text-light-primary {
+  color: #0F172A;
+}
+
+.text-light-secondary {
+  color: #475569;
+}
+
+.text-light-muted {
+  color: #64748B;
+}
+
+/* Cyber Buttons (Landing Page Dark Theme) */
+.cyber-btn {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cyber-btn:hover {
+  background: linear-gradient(135deg, #06B6D4 0%, #10B981 100%);
+  color: #05070A;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+  text-shadow: none;
+}
+
+/* Status Indicators */
+.neon-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.neon-pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  animation: pulse-ring 2.5s infinite;
+}
+
+.neon-pulse-dot.cyan {
+  background-color: var(--color-ev-cyan);
+  box-shadow: 0 0 10px var(--color-ev-cyan-glow);
+}
+.neon-pulse-dot.cyan::after {
+  border: 1px solid var(--color-ev-cyan);
+}
+
+.neon-pulse-dot.green {
+  background-color: var(--color-ev-green);
+  box-shadow: 0 0 10px var(--color-ev-green-glow);
+}
+.neon-pulse-dot.green::after {
+  border: 1px solid var(--color-ev-green);
+}
+
+.neon-pulse-dot.yellow {
+  background-color: var(--color-ev-yellow);
+  box-shadow: 0 0 10px var(--color-ev-yellow-glow);
+}
+.neon-pulse-dot.yellow::after {
+  border: 1px solid var(--color-ev-yellow);
+}
+
+.neon-pulse-dot.red {
+  background-color: var(--color-ev-red);
+  box-shadow: 0 0 10px var(--color-ev-red-glow);
+}
+.neon-pulse-dot.red::after {
+  border: 1px solid var(--color-ev-red);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Futuristic custom animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes pulse-light {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.animate-pulse-light {
+  animation: pulse-light 2s infinite ease-in-out;
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.4);
+}

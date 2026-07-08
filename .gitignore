@@ -1,0 +1,19 @@
+# Exclude PRD and datasets
+PRD_ChargeSense.md
+datasets/
+
+# React frontend ignores
+chargesense/node_modules/
+chargesense/dist/
+chargesense/.env
+chargesense/.env.local
+
+# Python backend ignores
+backend/__pycache__/
+backend/models/__pycache__/
+backend/.env
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/

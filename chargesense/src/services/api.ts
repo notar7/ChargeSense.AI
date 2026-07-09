@@ -82,6 +82,18 @@ export interface ChatResponse {
   content: string;
 }
 
+export interface QMSBatch {
+  batch_id: string;
+  internal_resistance_mohm: number;
+  weld_consistency_pct: number;
+  ultrasonic_score_pct: number;
+  qa_status: 'Passed' | 'Drifted';
+}
+
+export interface QMSDiagnosticResponse {
+  diagnostic: string;
+}
+
 export const api = {
   getFleetOverview: async (): Promise<FleetOverview> => {
     const res = await fetch(`${API_BASE_URL}/fleet/overview`);
@@ -135,6 +147,27 @@ export const api = {
       body: JSON.stringify({ messages }),
     });
     if (!res.ok) throw new Error('Chat agent error');
+    return res.json();
+  },
+
+  getQMSBatches: async (): Promise<QMSBatch[]> => {
+    const res = await fetch(`${API_BASE_URL}/qms/batches`);
+    if (!res.ok) throw new Error('Failed to fetch QMS batches');
+    return res.json();
+  },
+  
+  getQMSDiagnostic: async (data: {
+    batch_id: string;
+    internal_resistance_mohm: number;
+    weld_consistency_pct: number;
+    ultrasonic_score_pct: number;
+  }): Promise<QMSDiagnosticResponse> => {
+    const res = await fetch(`${API_BASE_URL}/qms/diagnostic`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Failed to generate QMS diagnostics');
     return res.json();
   }
 };

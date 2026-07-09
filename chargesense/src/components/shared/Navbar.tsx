@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Globe } from 'lucide-react';
 
 interface NavbarProps {
@@ -9,6 +9,7 @@ interface NavbarProps {
 export default function Navbar({ collapsed }: NavbarProps) {
   const [time, setTime] = useState(new Date());
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -33,27 +34,32 @@ export default function Navbar({ collapsed }: NavbarProps) {
     });
   };
 
+  const getPageTitle = (pathname: string) => {
+    switch (pathname) {
+      case '/dashboard':
+        return 'Fleet Intelligence Dashboard';
+      case '/procurement':
+        return 'AI Procurement Agent';
+      case '/supply-chain':
+        return 'Supply Chain Risk Network';
+      case '/carbon':
+        return 'Carbon Engine Tracker';
+      default:
+        return 'ChargeSense.AI Grid Control';
+    }
+  };
+
   return (
     <header 
       className={`fixed top-4 right-4 z-10 flex h-16 items-center justify-between px-6 rounded-2xl border border-white/5 bg-[#080C14]/75 backdrop-blur-xl shadow-xl transition-all duration-300 ${
         collapsed ? 'left-[92px]' : 'left-[276px]'
       }`}
     >
-      {/* Left side: Status indicators */}
+      {/* Left side: Dynamic Page Title */}
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded-lg">
-            <span className="text-[0.65rem] font-bold text-cyan-400 font-mono tracking-widest uppercase">
-              STATION STATUS
-            </span>
-          </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <span className="text-gray-600 font-mono text-xs">/</span>
-            <span className="text-[0.75rem] font-bold tracking-widest text-emerald-400 font-mono uppercase bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/15">
-              NODE_ACTIVE
-            </span>
-          </div>
-        </div>
+        <h2 className="text-base font-extrabold text-white uppercase tracking-wider font-mono bg-gradient-to-r from-white via-gray-200 to-cyan-400 bg-clip-text text-transparent">
+          {getPageTitle(location.pathname)}
+        </h2>
       </div>
 
       {/* Right side: Orbit view navigation & Clock */}

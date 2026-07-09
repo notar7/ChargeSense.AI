@@ -294,18 +294,13 @@ export default function FleetDashboard() {
 
   return (
     <div className="space-y-6 animate-fade-in text-slate-800">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b border-slate-200 pb-4 gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 uppercase">
-            Fleet Intelligence Dashboard
-          </h1>
-          <p className="text-[0.65rem] text-slate-500 font-mono tracking-widest mt-1 uppercase">
-            500 Active Assets | Predictive ML Engine Connected
-          </p>
+      {/* Search & Filters Row */}
+      <div className="flex justify-between items-center border-b border-slate-200 pb-4 pt-4">
+        {/* Left side: Telemetry Control Status Text */}
+        <div className="hidden md:flex items-center gap-2 text-xs font-mono font-bold text-slate-500">
+          <Activity className="h-4 w-4 text-cyan-500 animate-pulse" />
+          <span>Operational Control Center: Monitoring 500 active telemetry streams across India.</span>
         </div>
-        
-        {/* Search & Filters */}
         <div className="flex items-center gap-3">
           <div className="relative">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">

@@ -21,10 +21,30 @@ CITIES = {
 }
 
 EV_MODELS = [
-    { "brand": "Tata Motors",  "model": "Ace EV",    "payload_kg": 750,  "range_km": 154, "battery_kwh": 21.3, "price_lakh": 14.5,  "type": "Light Cargo" },
-    { "brand": "Olectra",      "model": "C19",       "payload_kg": 5000, "range_km": 200, "battery_kwh": 150,  "price_lakh": 280.0, "type": "Heavy Bus" },
-    { "brand": "PMI Electro",  "model": "Toofan",    "payload_kg": 500,  "range_km": 120, "battery_kwh": 12.0, "price_lakh": 8.5,   "type": "Mini Cargo" },
-    { "brand": "Euler Motors", "model": "Storm EV",  "payload_kg": 688,  "range_km": 151, "battery_kwh": 19.2, "price_lakh": 12.9,  "type": "Light Cargo" }
+    # Light Cargo (Tata Motors, Mahindra, Euler, BYD, etc.)
+    { "brand": "Tata Motors",  "model": "Ace EV",              "payload_kg": 750,   "range_km": 154, "battery_kwh": 21.3, "price_lakh": 14.5,  "type": "Light Cargo" },
+    { "brand": "Euler Motors", "model": "Storm EV",            "payload_kg": 688,   "range_km": 151, "battery_kwh": 19.2, "price_lakh": 12.9,  "type": "Light Cargo" },
+    { "brand": "Mahindra",     "model": "Treo Zor",            "payload_kg": 550,   "range_km": 125, "battery_kwh": 7.4,  "price_lakh": 3.8,   "type": "Light Cargo" },
+    { "brand": "Mahindra",     "model": "Zor Grand",           "payload_kg": 450,   "range_km": 90,  "battery_kwh": 10.2, "price_lakh": 4.2,   "type": "Light Cargo" },
+    { "brand": "BYD",          "model": "T3 Cargo Van",        "payload_kg": 720,   "range_km": 300, "battery_kwh": 50.3, "price_lakh": 27.5,  "type": "Light Cargo" },
+    
+    # Mid Cargo (Tata Motors, Ashok Leyland, etc. 1 to 4 tonnes)
+    { "brand": "Tata Motors",  "model": "Ultra T.7 Electric",  "payload_kg": 3690,  "range_km": 180, "battery_kwh": 62.5, "price_lakh": 35.0,  "type": "Mid Cargo" },
+    { "brand": "Ashok Leyland", "model": "Bada Dost i1",       "payload_kg": 1250,  "range_km": 150, "battery_kwh": 32.0, "price_lakh": 16.8,  "type": "Mid Cargo" },
+    { "brand": "Ashok Leyland", "model": "Bada Dost i3",       "payload_kg": 1400,  "range_km": 160, "battery_kwh": 38.5, "price_lakh": 18.2,  "type": "Mid Cargo" },
+    { "brand": "Eicher",       "model": "Pro 2049 EV",         "payload_kg": 3500,  "range_km": 174, "battery_kwh": 60.0, "price_lakh": 28.0,  "type": "Mid Cargo" },
+    
+    # Heavy Loader (Volvo, Eicher, BYD - 5 to 25 tonnes)
+    { "brand": "Volvo",        "model": "FH Electric",         "payload_kg": 24000, "range_km": 300, "battery_kwh": 540.0, "price_lakh": 650.0, "type": "Heavy Loader" },
+    { "brand": "Volvo",        "model": "FM Electric",         "payload_kg": 18000, "range_km": 300, "battery_kwh": 450.0, "price_lakh": 480.0, "type": "Heavy Loader" },
+    { "brand": "Eicher",       "model": "Pro 8055 EV",         "payload_kg": 12000, "range_km": 220, "battery_kwh": 250.0, "price_lakh": 95.0,  "type": "Heavy Loader" },
+    { "brand": "Tata Motors",  "model": "Prima E.28K Dumper",  "payload_kg": 15000, "range_km": 200, "battery_kwh": 453.0, "price_lakh": 160.0, "type": "Heavy Loader" },
+    
+    # Passenger Bus (Olectra, PMI Electro, Tata Motors)
+    { "brand": "Olectra",      "model": "C19 Heavy Bus",       "payload_kg": 5000,  "range_km": 200, "battery_kwh": 150.0, "price_lakh": 280.0, "type": "Passenger Bus" },
+    { "brand": "Olectra",      "model": "K7 City Shuttle",     "payload_kg": 3000,  "range_km": 180, "battery_kwh": 120.0, "price_lakh": 190.0, "type": "Passenger Bus" },
+    { "brand": "PMI Electro",  "model": "Toofan Transit",      "payload_kg": 500,   "range_km": 120, "battery_kwh": 12.0,  "price_lakh": 8.5,   "type": "Passenger Bus" },
+    { "brand": "Tata Motors",  "model": "Starbus EV 4/12",     "payload_kg": 4500,  "range_km": 220, "battery_kwh": 140.0, "price_lakh": 220.0, "type": "Passenger Bus" }
 ]
 
 def load_battery_model():

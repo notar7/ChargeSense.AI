@@ -8,15 +8,21 @@ interface GlobeEntryProps {
   onIndiaClick: () => void;
 }
 
-// Indian city coordinates [lat, lng, name]
-const INDIAN_CITIES: [number, number, string][] = [
-  [19.076, 72.877, 'Mumbai'],
-  [28.679, 77.213, 'Delhi'],
-  [13.082, 80.270, 'Chennai'],
-  [22.572, 88.363, 'Kolkata'],
-  [18.520, 73.856, 'Pune'],
-  [12.971, 77.594, 'Bangalore'],
-  [17.385, 78.486, 'Hyderabad'],
+interface IndianCity {
+  lat: number;
+  lng: number;
+  name: string;
+  color: number;
+}
+
+const INDIAN_CITIES: IndianCity[] = [
+  { lat: 19.076, lng: 72.877, name: 'Mumbai', color: 0x00E5FF },
+  { lat: 28.679, lng: 77.213, name: 'Delhi', color: 0x00E676 },
+  { lat: 13.082, lng: 80.270, name: 'Chennai', color: 0xFFD600 },
+  { lat: 22.572, lng: 88.363, name: 'Kolkata', color: 0xE040FB },
+  { lat: 18.520, lng: 73.856, name: 'Pune', color: 0xFF3D00 },
+  { lat: 12.971, lng: 77.594, name: 'Bangalore', color: 0x2979FF },
+  { lat: 17.385, lng: 78.486, name: 'Hyderabad', color: 0xFF2A6D },
 ];
 
 // Convert lat/lng to 3D sphere position
@@ -94,39 +100,24 @@ function createAtmosphere(earth: THREE.Mesh, radius: number) {
 // Create pulsing city markers
 function createCityMarkers(earth: THREE.Mesh, radius: number) {
   const markers: THREE.Mesh[] = [];
-  const pulseRings: THREE.Mesh[] = [];
 
-  INDIAN_CITIES.forEach(([lat, lng]) => {
-    const pos = latLngToVector3(lat, lng, radius * 1.02);
+  INDIAN_CITIES.forEach((city) => {
+    const pos = latLngToVector3(city.lat, city.lng, radius * 1.02);
 
-    // Main dot
-    const dotGeometry = new THREE.SphereGeometry(0.05, 16, 16);
+    // Main dot (increased size to 0.024)
+    const dotGeometry = new THREE.SphereGeometry(0.024, 16, 16);
     const dotMaterial = new THREE.MeshBasicMaterial({
-      color: 0x10B981,
+      color: city.color,
       transparent: true,
-      opacity: 1,
+      opacity: 0.9,
     });
     const dot = new THREE.Mesh(dotGeometry, dotMaterial);
     dot.position.copy(pos);
     earth.add(dot);
     markers.push(dot);
-
-    // Pulse ring
-    const ringGeometry = new THREE.RingGeometry(0.06, 0.12, 32);
-    const ringMaterial = new THREE.MeshBasicMaterial({
-      color: 0x10B981,
-      transparent: true,
-      opacity: 0.6,
-      side: THREE.DoubleSide,
-    });
-    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-    ring.position.copy(pos);
-    ring.lookAt(new THREE.Vector3(0, 0, 0));
-    earth.add(ring);
-    pulseRings.push(ring);
   });
 
-  return { markers, pulseRings };
+  return { markers };
 }
 
 export default function GlobeEntry({ onIndiaClick }: GlobeEntryProps) {
@@ -326,7 +317,7 @@ export default function GlobeEntry({ onIndiaClick }: GlobeEntryProps) {
     createAtmosphere(earth, earthRadius);
 
     // City markers
-    const { pulseRings } = createCityMarkers(earth, earthRadius);
+    const { markers: pulseRings } = createCityMarkers(earth, earthRadius);
 
     // Initial earth rotation angle
     earth.rotation.y = -0.5;
@@ -363,11 +354,11 @@ export default function GlobeEntry({ onIndiaClick }: GlobeEntryProps) {
         earth.rotation.y += 0.0012;
       }
 
-      // Pulse city rings
-      pulseRings.forEach((ring, i) => {
-        const scale = 1 + 0.45 * Math.sin(time * 2.5 + i * 0.8);
-        ring.scale.set(scale, scale, scale);
-        (ring.material as THREE.MeshBasicMaterial).opacity = 0.6 * (1 - (scale - 1));
+      // Pulse city dots from inside (breathing scale & opacity)
+      pulseRings.forEach((dot, i) => {
+        const scale = 1.0 + 0.22 * Math.sin(time * 3.5 + i * 0.8);
+        dot.scale.set(scale, scale, scale);
+        (dot.material as THREE.MeshBasicMaterial).opacity = 0.6 + 0.35 * Math.sin(time * 3.5 + i * 0.8);
       });
 
       stars.rotation.y += 0.00005;
@@ -420,22 +411,22 @@ export default function GlobeEntry({ onIndiaClick }: GlobeEntryProps) {
         
         {/* Left Column (5 cols) - Title & CTA (Enable pointer events only on interactive parts) */}
         <div ref={mainOverlayRef} className="lg:col-span-5 flex flex-col justify-center text-left py-12 pointer-events-auto">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-emerald-400 glow-logo-ring">
-              <span className="text-lg font-black text-[#05070C]">⚡</span>
-              <span className="absolute -inset-1 rounded-xl bg-gradient-to-br from-cyan-400 to-emerald-400 opacity-20 blur-sm animate-pulse" />
+          <div className="flex items-center gap-4 mb-6 flex-nowrap">
+            <div className="relative flex items-center justify-center w-16 h-16 rounded-2xl overflow-hidden border border-white/10 shrink-0 shadow-lg shadow-cyan-900/10 bg-[#0A0F1E]">
+              <img src="/logo.png" alt="ChargeSense Logo" className="w-full h-full object-cover" />
             </div>
-            <span className="text-xs font-extrabold tracking-widest text-cyan-400 font-mono uppercase bg-cyan-950/40 border border-cyan-500/25 px-3 py-1 rounded-lg">
-              SYSTEM CONNECTED
-            </span>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white uppercase leading-none flex items-center gap-0 whitespace-nowrap">
+              <span>CHARGE</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-20 w-20 md:h-24 md:w-24 text-cyan-400 fill-cyan-400 animate-pulse shrink-0 -mx-3.5">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span>ENSE</span>
+              <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">.AI</span>
+            </h1>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight text-white mb-6 uppercase leading-none">
-            Charge<span className="bg-gradient-to-r from-cyan-400 via-emerald-400 to-emerald-500 bg-clip-text text-transparent">Sense</span>
-          </h1>
-
           <p className="text-sm md:text-base text-gray-400 mb-8 leading-relaxed max-w-md font-medium">
-            AI-driven operational intelligence for India's industrial EV supply chain. Predict battery degradation, optimize fleet procurement, and monitor mineral risk vectors.
+            Accelerating India's Net-Zero Transition. AI-driven operational intelligence for EV battery health, fleet procurement, and mineral supply chain vectors.
           </p>
 
           <div>

@@ -250,12 +250,25 @@ def recommend_ev(req: RecommendationRequest):
         payload_fit = oem["payload_kg"] >= payload * 0.9
         
         if range_fit_pct > 30 and payload_fit:
-            # 5-year TCO calculation: assume diesel TCO is much higher
-            # Diesel: Fuel + maintenance + capital cost
-            # EV: Low fuel + low maintenance + capital cost
-            diesel_tco_5yr = (daily_km * 300 * 5) * 1.5 + (payload * 2.0)
-            ev_tco_5yr = (daily_km * 300 * 5) * 0.3 + (oem["price_lakh"] * 100000)
-            savings_5yr = max(0, int(diesel_tco_5yr - ev_tco_5yr))
+            # 5-year TCO calculation: compare diesel vs EV capital & operational costs
+            diesel_price_lakh = oem["price_lakh"] * 0.65  # Diesel is typically ~35% cheaper to acquire than EV
+            diesel_capital = diesel_price_lakh * 100000
+            ev_capital = oem["price_lakh"] * 100000
+            
+            total_km_5yr = daily_km * 300 * 5
+            
+            # Fuel/Electricity running cost per km (assuming typical industrial rates in India)
+            diesel_running_per_km = 8.5
+            ev_running_per_km = 1.3
+            
+            # Maintenance overhead cost per km
+            diesel_maint_per_km = 1.8
+            ev_maint_per_km = 0.5
+            
+            diesel_tco = diesel_capital + (diesel_running_per_km + diesel_maint_per_km) * total_km_5yr
+            ev_tco = ev_capital + (ev_running_per_km + ev_maint_per_km) * total_km_5yr
+            
+            savings_5yr = max(0, int(diesel_tco - ev_tco))
             
             confidence = round((range_fit_pct * 0.6) + (100 if payload_fit else 40) * 0.4, 1)
             
@@ -277,7 +290,7 @@ def recommend_ev(req: RecommendationRequest):
     
     return {
         "requested": req,
-        "recommendations": recommendations[:3] # Top 3 matches
+        "recommendations": recommendations # Return all matching vehicles
     }
 
 @app.post("/api/agent/chat")
@@ -289,13 +302,21 @@ def chat_agent(req: ChatRequest):
         
     user_question = req.messages[-1].content
     
+    # Format the EV specs ground truth for the LLM
+    ev_specs_reference = ""
+    for oem in EV_MODELS:
+        ev_specs_reference += f"- {oem['brand']} {oem['model']}: Class={oem['type']}, Payload={oem['payload_kg']}kg, Range={oem['range_km']}km, Battery={oem['battery_kwh']}kWh, Price=₹{oem['price_lakh']} Lakhs\n"
+    
     system_instruction = (
-        "You are the ChargeSense AI Procurement Agent, an expert in industrial fleet electrification "
-        "and TCO analysis for Indian operations. You recommend EV replacements for diesel fleets. "
-        "Use real Indian OEM specifications (such as Tata Motors Ace EV payload 750kg, Olectra buses, "
-        "Euler Motors Storm EV payload 688kg, PMI Electro Toofan). Answer in a professional, concise, "
-        "data-driven tone, referencing TCO, payloads, battery sizing (kWh), carbon savings, and range. "
-        "Format responses using bolding and clean bullet points where appropriate."
+        "You are VoltAdvisor, the ChargeSense AI Procurement Agent, an expert in industrial fleet electrification "
+        "and TCO analysis for Indian logistics operations. You recommend EV replacements for diesel fleets. "
+        "You MUST align your technical specs strictly with the ground-truth database below:\n\n"
+        f"{ev_specs_reference}\n"
+        "Rules:\n"
+        "1. Never hallucinate specs. Use the battery kWh, range km, and payload capacity listed above (e.g. Euler Motors Storm EV has a 19.2 kWh battery and 151 km range).\n"
+        "2. Provide TCO comparison: EV fuel/electricity costs are significantly cheaper than diesel. Reference 5-year savings.\n"
+        "3. Keep answers concise, data-driven, and highly professional.\n"
+        "4. Format responses using bolding and clean bullet points where appropriate."
     )
     
     prompt = f"Conversation History:\n{history_text}\nUser Question: {user_question}"
@@ -303,6 +324,65 @@ def chat_agent(req: ChatRequest):
     answer = get_llm_completion(prompt, system_instruction)
     
     return {"role": "assistant", "content": answer}
+
+# --- CELL MANUFACTURING QMS INTEGRATION ENDPOINTS ---
+
+class DiagnosticRequest(BaseModel):
+    batch_id: str
+    internal_resistance_mohm: float
+    weld_consistency_pct: float
+    ultrasonic_score_pct: float
+
+MOCK_QMS_BATCHES = [
+    { "batch_id": "BATCH-NMC-001", "internal_resistance_mohm": 1.75, "weld_consistency_pct": 98.9, "ultrasonic_score_pct": 96.5, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-002", "internal_resistance_mohm": 1.82, "weld_consistency_pct": 99.1, "ultrasonic_score_pct": 97.2, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-003", "internal_resistance_mohm": 1.80, "weld_consistency_pct": 98.5, "ultrasonic_score_pct": 95.9, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-004", "internal_resistance_mohm": 2.45, "weld_consistency_pct": 91.2, "ultrasonic_score_pct": 89.4, "qa_status": "Drifted" },
+    { "batch_id": "BATCH-NMC-005", "internal_resistance_mohm": 1.79, "weld_consistency_pct": 98.8, "ultrasonic_score_pct": 96.3, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-006", "internal_resistance_mohm": 1.81, "weld_consistency_pct": 98.7, "ultrasonic_score_pct": 96.8, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-007", "internal_resistance_mohm": 1.77, "weld_consistency_pct": 99.0, "ultrasonic_score_pct": 97.0, "qa_status": "Passed" },
+    { "batch_id": "BATCH-LFP-008", "internal_resistance_mohm": 1.84, "weld_consistency_pct": 98.3, "ultrasonic_score_pct": 95.8, "qa_status": "Passed" },
+    { "batch_id": "BATCH-LFP-009", "internal_resistance_mohm": 2.68, "weld_consistency_pct": 95.4, "ultrasonic_score_pct": 87.5, "qa_status": "Drifted" },
+    { "batch_id": "BATCH-LFP-010", "internal_resistance_mohm": 1.83, "weld_consistency_pct": 98.6, "ultrasonic_score_pct": 96.1, "qa_status": "Passed" },
+    { "batch_id": "BATCH-LFP-011", "internal_resistance_mohm": 1.78, "weld_consistency_pct": 98.9, "ultrasonic_score_pct": 96.4, "qa_status": "Passed" },
+    { "batch_id": "BATCH-LFP-012", "internal_resistance_mohm": 1.80, "weld_consistency_pct": 98.8, "ultrasonic_score_pct": 96.6, "qa_status": "Passed" },
+    { "batch_id": "BATCH-LFP-013", "internal_resistance_mohm": 1.82, "weld_consistency_pct": 98.7, "ultrasonic_score_pct": 96.2, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-014", "internal_resistance_mohm": 2.85, "weld_consistency_pct": 90.5, "ultrasonic_score_pct": 85.1, "qa_status": "Drifted" },
+    { "batch_id": "BATCH-NMC-015", "internal_resistance_mohm": 1.76, "weld_consistency_pct": 99.2, "ultrasonic_score_pct": 97.4, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-016", "internal_resistance_mohm": 1.79, "weld_consistency_pct": 98.9, "ultrasonic_score_pct": 96.8, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-017", "internal_resistance_mohm": 1.81, "weld_consistency_pct": 98.6, "ultrasonic_score_pct": 96.0, "qa_status": "Passed" },
+    { "batch_id": "BATCH-NMC-018", "internal_resistance_mohm": 1.80, "weld_consistency_pct": 98.8, "ultrasonic_score_pct": 96.5, "qa_status": "Passed" },
+    { "batch_id": "BATCH-LFP-019", "internal_resistance_mohm": 2.59, "weld_consistency_pct": 92.8, "ultrasonic_score_pct": 88.0, "qa_status": "Drifted" },
+    { "batch_id": "BATCH-LFP-020", "internal_resistance_mohm": 1.82, "weld_consistency_pct": 98.5, "ultrasonic_score_pct": 96.2, "qa_status": "Passed" }
+]
+
+@app.get("/api/qms/batches")
+def get_qms_batches():
+    return MOCK_QMS_BATCHES
+
+@app.post("/api/qms/diagnostic")
+def get_qms_diagnostic(req: DiagnosticRequest):
+    system_instruction = (
+        "You are VoltQMS, an AI-driven manufacturing Quality Management System diagnostic engine. "
+        "You diagnose cell manufacturing defects based on cell inspection logs (Internal Resistance, Weld Consistency, and Ultrasonic Score). "
+        "Provide a highly structured, engineering-level diagnostic report identifying: "
+        "1. THE PROCESS DEFECT (explain weld voids, cathode coating unevenness, or assembly contact issues). "
+        "2. THE CORRELATIVE PROCESS CAUSE (e.g., focal point offset in laser weld scanners, or paste viscosity shifts in slit-die slot coaters). "
+        "3. EXACT MACHINE CALIBRATION FIXES (e.g., adjust nozzle pressure, increase focal offset by +1.5mm, or recalibrate ultrasonic transducers). "
+        "Format your answer in a clear, industrial developer terminal format using bold headers and short bullet points."
+    )
+    
+    prompt = (
+        f"Diagnose Batch Anomaly:\n"
+        f"Batch ID: {req.batch_id}\n"
+        f"Internal Resistance: {req.internal_resistance_mohm} mOhm (Target: 1.8)\n"
+        f"Weld Consistency: {req.weld_consistency_pct}% (Target: >98%)\n"
+        f"Ultrasonic QA Score: {req.ultrasonic_score_pct}% (Target: >95%)\n"
+        f"QA Status: DRIFTED\n"
+    )
+    
+    analysis = get_llm_completion(prompt, system_instruction)
+    return {"diagnostic": analysis}
 
 if __name__ == "__main__":
     import uvicorn

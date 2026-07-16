@@ -1,192 +1,116 @@
-<p align="center">
-  <img src="chargesense/public/logo.png" alt="ChargeSense.AI Logo" width="180px" style="border-radius: 24px; box-shadow: 0 10px 25px rgba(0, 229, 255, 0.2);" />
-</p>
+<div align="center">
+  <h1>ChargeSense.AI — Industrial EV Telemetry & Predictive Analytics Platform</h1>
+  <img src="chargesense/public/logo.png" alt="ChargeSense.AI Logo" width="200" style="border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);"/>
+  <h3>State-of-the-Art EV Telemetry and Predictive Analytics Platform</h3>
+  <p><strong>Developed for the ET AI Hackathon 2026</strong></p>
 
-<h1 align="center">⚡ ChargeSense.AI</h1>
-
-<p align="center">
-  <strong>Industrial EV Telemetry, AI Procurement, Geopolitical Supply Chain Risk & Battery Degradation Platform</strong>
-</p>
-
-<p align="center">
-  <a href="https://github.com/notar7/ChargeSense.AI">
-    <img src="https://img.shields.io/github/stars/notar7/ChargeSense.AI?style=social" alt="GitHub Stars" />
-  </a>
-  <a href="https://github.com/notar7/ChargeSense.AI/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/notar7/ChargeSense.AI?color=blue" alt="License" />
-  </a>
-  <img src="https://img.shields.io/badge/Python-3.9%2B-cyan?logo=python" alt="Python Version" />
-  <img src="https://img.shields.io/badge/React-18.0-emerald?logo=react" alt="React Version" />
-  <img src="https://img.shields.io/badge/FastAPI-0.95.0-blueviolet?logo=fastapi" alt="FastAPI Version" />
-</p>
+  [![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react&logoColor=black&style=for-the-badge)](https://reactjs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white&style=for-the-badge)](https://www.typescriptlang.org/)
+  [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white&style=for-the-badge)](https://www.python.org/)
+  [![FastAPI](https://img.shields.io/badge/FastAPI-0.95.x-009688?logo=fastapi&logoColor=white&style=for-the-badge)](https://fastapi.tiangolo.com/)
+  [![Groq](https://img.shields.io/badge/Groq-LLaMA%203.3-orange?style=for-the-badge)](https://groq.com/)
+  [![Three.js](https://img.shields.io/badge/Three.js-Interactive-black?logo=three.js&logoColor=white&style=for-the-badge)](https://threejs.org/)
+</div>
 
 ---
 
-## 📋 Table of Contents
+## Platform Overview
 
-- [🌐 Overview](#-overview)
-- [✨ Key Features](#-key-features)
-  - [1. 🪐 3D Cinematic Orbit View](#1-🪐-3d-cinematic-orbit-view)
-  - [2. 📊 Predictive Fleet Telemetry & Battery SOH](#2-📊-predictive-fleet-telemetry--battery-soh)
-  - [3. 🤖 AI Procurement Agent (VoltAdvisor)](#3-🤖-ai-procurement-agent-voltadvisor)
-  - [4. 🗺️ Geopolitical Supply Chain Risk & QMS (VoltQMS)](#4-🗺️-geopolitical-supply-chain-risk--qms-voltqms)
-  - [5. 🌿 Real-Time Carbon Mitigation Ticker](#5-🌿-real-time-carbon-mitigation-ticker)
-- [🛠️ Architecture & Tech Stack](#️-architecture--tech-stack)
-- [📦 Installation & Local Setup](#-installation--local-setup)
-  - [Prerequisites](#prerequisites)
-  - [Backend Setup](#backend-setup)
-  - [Frontend Setup](#frontend-setup)
-- [🔌 API Endpoints](#-api-endpoints)
-- [🤝 Contributors & Credits](#-contributors--credits)
+**ChargeSense.AI** is a unified, full-stack EV fleet intelligence and logistics optimization portal engineered to transition siloed vehicle data into an actionable decision-making database. It enables Logistics Managers, Procurement Officers, Cell Quality Engineers, and Sustainability Officers to perform end-to-end operational workflows—ranging from spatial fleet tracking and predictive battery degradation monitoring to interactive co-offending network link-analysis and AI-assisted conversational query resolution.
+
+The platform is designed to scale dynamically, integrating real-time telemetry inputs with LLaMA 3.3 conversational intelligence.
 
 ---
 
-## 🌐 Overview
+## System Architecture
 
-**ChargeSense.AI** is an advanced operational intelligence platform designed to manage and optimize India's expanding industrial EV logistics infrastructure. From monitoring battery state-of-health (SOH) using predictive aging algorithms to mitigating geopolitical risks in lithium-ion mineral supplies, ChargeSense.AI unifies operations, procurement, and sustainability inside a seamless, dark-themed, high-fidelity console.
+The ChargeSense.AI platform is built on a decoupled serverless architecture:
 
-Built for the **ET AI Hackathon 2026**, the platform solves complex decision-making bottlenecks for enterprise fleet transitions by combining live telemetry analytics, real-time macro-economic data, and LLM-driven diagnostic reasoning.
+* **Client-Side (React Client App):** A responsive React + TypeScript Single Page Application (SPA) utilizing Tailwind CSS for styling, Leaflet for spatial coordinates tracking, Recharts for battery capacity curves, and Three.js + GSAP for the cinematic 3D Earth landing page.
+* **Backend API (FastAPI):** A high-performance Python ASGI web service handling data ingestion, predictions from locally trained Scikit-Learn regressors, commodity pricing feeds, and LLM completions via Groq Cloud APIs.
 
 ---
 
-## ✨ Key Features
+## Key Functional Modules & Features
 
-### 1. 🪐 3D Cinematic Orbit View
-* **Visual Landing Experience:** Powered by a customized **Three.js** canvas rendering a rotating Earth globe with volumetric atmosphere shaders and custom starfields.
-* **Beacons & Nodes:** Pinpoints major Indian transport terminals (Mumbai, Delhi, Chennai, Kolkata, Pune, Bangalore, Hyderabad) using distinct, glowing color nodes.
-* **Non-Overlapping Micro-Pulses:** Features custom interior scaling and breathing mesh animations that prevent visual clutter or intersection.
-* **Camera Fly-In:** Clicking "Explore India's Fleet" triggers a custom **GSAP** timeline that flies the camera into the coordinate space of the subcontinent before routing to the control room.
+### 1. 🪐 3D Cinematic Orbit Landing
+* **Volumetric Earth Sphere:** A custom Three.js globe showing 7 distinct, color-coded transport terminal nodes across India.
+* **Internal Breathing Pulses:** Breathing scale animations that pulse internally inside dot borders to prevent visual overlap.
+* **GSAP Transition:** Zoom-fly camera timelines that navigate to India's coordinates upon entry.
 
 ### 2. 📊 Predictive Fleet Telemetry & Battery SOH
-* **Interactive Heatmaps:** Leverages a custom Leaflet overlay tracking 500 active commercial EVs across the country, color-coded by health status (Normal, Attention, Critical).
-* **Battery Aging Models:** Implements linear regression models trained on **NASA's Lithium-Ion Battery Aging dataset** (monitoring cycle counts vs. capacity fade).
-* **Actual vs. Predicted SOH Curves:** Interactive Recharts display vehicle operational history alongside forecasted degradation curves, highlighting failure points (SOH < 70%).
+* **India Tracking Map:** A customized Leaflet coordinate dashboard pinning 500 active commercial EVs across transport lanes.
+* **Degradation Analytics:** Plots real-time cycle decay capacity curves using regression parameters trained on the **NASA Lithium-Ion Battery Aging dataset**.
+* **Failure Boundaries:** Highlights critical battery thresholds (SOH < 70%) to issue pre-emptive maintenance warnings.
 
 ### 3. 🤖 AI Procurement Agent (VoltAdvisor)
-* **Electrification TCO Matcher:** Operational sliders filter fleet payload requirements and range margins, querying the backend recommendations engine to find matches from a database of 17 commercial EV models.
-* **Spec Ground-Truth Chatbot:** Integrates **Groq LLaMA 3.3 70B** to generate TCO reports. Prompts are seeded with ground-truth Indian OEM specifications (Tata, Ashok Leyland, Olectra) to block hallucinations.
-* **Card Interactivity:** Clicking any matched vehicle instantly updates the chat console to compile a customized transition analysis for that model.
+* **Electrification TCO Matcher:** Filter payload requirements and range margins to match 17 commercial EV models.
+* **Spec Ground-Truth Chatbot:** Integrates **Groq LLaMA 3.3 70B** to generate custom transition reports using ground-truth Indian OEM specifications (Tata, Ashok Leyland, Olectra).
+* **Interactive Cards:** Selection clicks automatically query the chatbot to compile custom TCO profiles.
 
 ### 4. 🗺️ Geopolitical Supply Chain Risk & QMS (VoltQMS)
-* **Risk Vectors & Commodity Index:** Monitors price indices for Cobalt, Lithium, and Nickel with real-time price trends.
-* **Leaflet Geopolitical Map:** Maps international mineral shipping channels from global suppliers (DRC, Australia, Chile, Indonesia) back to ChargeSense India HQ, with polyline coordinates color-graded by political risk.
-* **VoltQMS Quality Control:** Tracks electrode coating and internal resistance on cell manufacturing assembly lines. Outliers trigger a diagnostic modal that queries LLaMA 3.3 for root-cause mechanical calibration advice.
+* **Commodity Price Feeds:** Monitors indexes for Cobalt, Lithium, and Nickel.
+* **Geopolitical Shipping Map:** Visualizes shipping channels from global mineral suppliers to India HQ with polyline risk color grading.
+* **VoltQMS Quality Control:** Monitors manufacturing internal resistance in an SPC control chart. Anomalies trigger diagnostic LLaMA completions to recommend corrective actions.
 
 ### 5. 🌿 Real-Time Carbon Mitigation Ticker
-* **High-Frequency accrual:** A real-time sub-second ticker counting carbon offset tonnage using fleet emissions metrics (updating every 100ms for active visual feedback).
-* **Cargo Class Breakdown:** Recharts bar charts compare saved vs. target emissions across Light Cargo, Mid Cargo, Heavy Cargo, and Staff Transport.
-* **Transition Rollout Audits:** Tracks electrification checklist progression across the Mumbai, Pune, and Delhi regional hubs.
+* **High-Frequency offset counter:** Dynamic ticking counter updating every 100ms based on active EV savings indices.
+* **Class Emissions:** Compare target vs. actual saved CO₂ by cargo dimensions.
+* **Audits Checklist:** Progress logs tracking terminal electrification completions.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
-
-```
-                     ┌──────────────────────────────┐
-                     │         Three.js UI          │
-                     │    3D Cinematic Earth Globe  │
-                     └──────────────┬───────────────┘
-                                    │ GSAP Fly-in
-                                    ▼
-            ┌──────────────────────────────────────────────┐
-            │             React (TypeScript) App           │
-            │  ┌──────────┐  ┌──────────┐  ┌────────────┐  │
-            │  │ Leaflet  │  │ Recharts │  │ Lucide Icons  │
-            │  └──────────┘  └──────────┘  └────────────┘  │
-            └───────┬──────────────────────────────┬───────┘
-                    │                              │
-                    │ Axios HTTP                   │ Server-Sent Feeds
-                    ▼                              ▼
-            ┌──────────────────────────────────────────────┐
-            │            Python FastAPI Backend            │
-            │  ┌──────────┐  ┌──────────┐  ┌────────────┐  │
-            │  │  Uvicorn │  │  Pydantic│  │ SciKitLearn│  │
-            │  └────┬─────┘  └────┬─────┘  └─────┬──────┘  │
-            └───────┼─────────────┼──────────────┼─────────┘
-                    │             │              │
-                    ▼             ▼              ▼
-              [Groq Cloud]   [NASA Li-Ion]  [17 OEM Spec
-               LLaMA-3.3     Cycle Models]    Databases]
-```
-
-* **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, Lucide React
-* **Graphics & Mapping:** Three.js, GSAP (GreenSock), Leaflet, Recharts
-* **Backend:** FastAPI (Python 3.9+), Uvicorn, Pydantic, Scikit-Learn
-* **LLM Engine:** Groq Cloud SDK (LLaMA 3.3 70B Versatile) / Gemini Flash API (Fallback)
-
----
-
-## 📦 Installation & Local Setup
+## Installation & Local Setup
 
 ### Prerequisites
-* **Node.js** v18+ & **npm**
-* **Python** v3.9+ & **pip**
-* **Groq API Key** (or **Gemini API Key**)
+* Node.js (v18+)
+* Python (v3.9+)
 
-### Backend Setup
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   # On Windows:
-   .\venv\Scripts\activate
-   # On Unix/macOS:
-   source venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Configure environment variables in a `.env` file inside the `backend/` directory:
-   ```env
-   GROQ_API_KEY=your_groq_api_key_here
-   # Optional Fallback:
-   GEMINI_API_KEY=your_gemini_api_key_here
-   ```
-5. Run the FastAPI server:
-   ```bash
-   python -m uvicorn main:app --port 8000 --reload
-   ```
-   The API will be available at `http://localhost:8000`.
+### Step 1: Install Frontend Dependencies
+```bash
+cd chargesense
+npm install
+```
 
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd chargesense
-   ```
-2. Install Node packages:
-   ```bash
-   npm install
-   ```
-3. Set up the development server:
-   ```bash
-   npm run dev
-   ```
-4. Open your browser and navigate to `http://localhost:5173` (or the port specified by Vite).
+### Step 2: Install Backend Dependencies
+```bash
+cd ../backend
+pip install -r requirements.txt
+```
+
+### Step 3: Configure Environment Variables
+Create a `.env` file in the `backend/` directory:
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
 
 ---
 
-## 🔌 API Endpoints
+## Running Locally
 
-The FastAPI server exposes the following operational endpoints:
+To run the full-stack application locally:
 
-* `GET /api/fleet/overview`: Returns aggregated fleet size, average SOH, critical alarm counts, and current carbon metrics.
-* `GET /api/fleet/vehicles`: Lists coordinates and capacity parameters for all 500 active vehicles.
-* `GET /api/fleet/vehicle/{id}`: Predicts battery degradation curves using the local Scikit-Learn regression parameters.
-* `POST /api/procurement/recommend`: Computes payload and range fit scores for commercial vehicles.
-* `POST /api/agent/chat`: Forwards fleet reports and queries to Groq LLaMA 3.3 with pre-loaded OEM contexts.
-* `GET /api/qms/batches`: Returns electrode thickness values, weld penetrations, and internal cell resistance for VoltQMS charts.
-* `GET /api/carbon/savings`: Retreives real-time carbon mitigation stats.
+### Step 1: Start Backend Server
+```bash
+cd backend
+python -m uvicorn main:app --port 8000 --reload
+```
+
+### Step 2: Start Frontend Application
+```bash
+cd chargesense
+npm run dev
+```
 
 ---
 
-## 🤝 Contributors & Credits
+## Contributors
 
-Developed by **Ashish Ranising** for the **ET AI Hackathon 2026**.
+* **Ashish Ranising** (GitHub: [@notar7](https://github.com/notar7))
 
-* **GitHub:** [@notar7](https://github.com/notar7)
-* **Repository:** [ChargeSense.AI](https://github.com/notar7/ChargeSense.AI)
-* **Dataset Credits:** NASA Prognostics Center of Excellence (Battery Aging Database).
+---
+
+<div align="center">
+  <p><strong>Developed for the ET AI Hackathon 2026</strong></p>
+  <p>© 2026 ChargeSense.AI. All rights reserved.</p>
+</div>

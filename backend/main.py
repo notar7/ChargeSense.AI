@@ -25,6 +25,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def read_root():
+    return {
+        "status": "online",
+        "service": "ChargeSense.AI Operational API",
+        "organizer": "The Economic Times",
+        "hackathon": "ET AI Hackathon 2.0"
+    }
+
 # In-memory database of 500 vehicles (generated once on startup)
 try:
     FLEET_DATABASE = generate_fleet()

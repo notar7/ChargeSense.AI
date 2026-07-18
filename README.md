@@ -164,7 +164,7 @@ npm run dev
 
 ## Developer
 
-* **Ashish Ranising** (GitHub: [@notar7](https://github.com/notar7))
+* **Ashish Ransing** (GitHub: [@notar7](https://github.com/notar7))
 
 ---
 

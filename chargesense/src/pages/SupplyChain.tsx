@@ -129,6 +129,24 @@ export default function SupplyChain() {
   ];
 
   const formatDiagnosticHTML = (text: string) => {
+    const parseBold = (str: string) => {
+      const boldRegex = /\*\*(.*?)\*\*/g;
+      const parts = [];
+      let lastIndex = 0;
+      let match;
+      while ((match = boldRegex.exec(str)) !== null) {
+        if (match.index > lastIndex) {
+          parts.push(str.substring(lastIndex, match.index));
+        }
+        parts.push(<strong key={match.index} className="text-white font-extrabold">{match[1]}</strong>);
+        lastIndex = boldRegex.lastIndex;
+      }
+      if (lastIndex < str.length) {
+        parts.push(str.substring(lastIndex));
+      }
+      return parts.length > 0 ? parts : str;
+    };
+
     return text.split('\n').map((line, idx) => {
       const trimmed = line.trim();
       if (!trimmed) return <div key={idx} className="h-2" />;
@@ -138,38 +156,27 @@ export default function SupplyChain() {
       }
 
       if (trimmed.startsWith('###')) {
-        const title = trimmed.replace(/^###\s*/, '');
+        const title = trimmed.replace(/^###\s*/, '').replace(/\*\*/g, '');
         return <h4 key={idx} className="text-[0.65rem] font-bold text-cyan-400 mt-3 mb-1 uppercase tracking-wider">{title}</h4>;
       }
       if (trimmed.startsWith('##')) {
-        const title = trimmed.replace(/^##\s*/, '');
+        const title = trimmed.replace(/^##\s*/, '').replace(/\*\*/g, '');
         return <h3 key={idx} className="text-xs font-extrabold text-white mt-4 mb-1.5 uppercase border-b border-slate-800 pb-1 tracking-wide">{title}</h3>;
       }
       if (trimmed.startsWith('#')) {
-        const title = trimmed.replace(/^#\s*/, '');
+        const title = trimmed.replace(/^#\s*/, '').replace(/\*\*/g, '');
         return <h2 key={idx} className="text-sm font-black text-cyan-300 mt-5 mb-2 uppercase tracking-wide">{title}</h2>;
+      }
+
+      // Check if it's a standalone bold header (e.g. **1. PROCESS DEFECT**)
+      const isStandaloneBoldHeader = trimmed.startsWith('**') && (trimmed.endsWith('**') || trimmed.endsWith('**:') || trimmed.length < 80);
+      if (isStandaloneBoldHeader) {
+        const headerText = trimmed.replace(/\*\*/g, '');
+        return <h3 key={idx} className="text-[0.65rem] font-bold text-cyan-300 mt-4 mb-1.5 uppercase border-b border-slate-800 pb-1 tracking-wide">{headerText}</h3>;
       }
 
       const isListItem = trimmed.startsWith('*') || trimmed.startsWith('-') || trimmed.startsWith('+');
       const content = isListItem ? trimmed.replace(/^[\s*\-+]+/, '').trim() : trimmed;
-
-      const parseBold = (str: string) => {
-        const boldRegex = /\*\*(.*?)\*\*/g;
-        const parts = [];
-        let lastIndex = 0;
-        let match;
-        while ((match = boldRegex.exec(str)) !== null) {
-          if (match.index > lastIndex) {
-            parts.push(str.substring(lastIndex, match.index));
-          }
-          parts.push(<strong key={match.index} className="text-white font-extrabold">{match[1]}</strong>);
-          lastIndex = boldRegex.lastIndex;
-        }
-        if (lastIndex < str.length) {
-          parts.push(str.substring(lastIndex));
-        }
-        return parts.length > 0 ? parts : str;
-      };
 
       if (isListItem) {
         return (
